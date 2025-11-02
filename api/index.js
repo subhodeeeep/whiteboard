@@ -1,11 +1,15 @@
-const { log } = require('console');
-const express = require('express');
-const app = express();
-const PORT = process.env.PORT || 3000;
-const httpServer = require('http').createServer(app);
-const io = require('socket.io')(httpServer)
+const http = require('http');
+const { Server } = require('socket.io');
 
 let drawingHistory = [];
+
+const httpServer = http.createServer((req, res) => {
+    res.writeHead(200, {'Content-Type' : 'text/plain'});
+    res.end('Socket.io server running');
+})
+const io = new Server(httpServer, {
+    cors: { origin: '*' } 
+});
 
 io.on('connection', (socket) => {
 
@@ -28,6 +32,6 @@ io.on('connection', (socket) => {
     })
 });
 
-app.use(express.static('public'));
-
-httpServer.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+module.exports = (req, res) => {
+    httpServer.emit('request', req, res)
+}
