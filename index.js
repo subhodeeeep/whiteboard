@@ -3,7 +3,12 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const httpServer = require('http').createServer(app);
-const io = require('socket.io')(httpServer)
+const io = require('socket.io')(httpServer, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
 
 let drawingHistory = [];
 
