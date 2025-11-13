@@ -27,10 +27,6 @@ eraserSizeSlider.value = localStorage.getItem('eraserSizeSlider') || eraserSizeS
 let penWidth = penSizeSlider.value;
 let eraserWidth = eraserSizeSlider.value;
 
-canvas.addEventListener('touchstart', handleTouchStart);
-canvas.addEventListener('touchmove', handleTouchMove);
-canvas.addEventListener('touchend', handleTouchEnd);
-
 const getTouchCoords = (e) => {
     const touch = e.touches[0] || e.changedTouches[0];
     const x = touch.clientX - canvasRect.left;
@@ -87,6 +83,11 @@ const handleTouchEnd = (e) => {
     e.preventDefault();
     mouseDown = false;
 }
+
+
+canvas.addEventListener('touchstart', handleTouchStart);
+canvas.addEventListener('touchmove', handleTouchMove);
+canvas.addEventListener('touchend', handleTouchEnd);
 
 clearBtn.onclick = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
