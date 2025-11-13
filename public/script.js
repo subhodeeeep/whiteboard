@@ -27,6 +27,67 @@ eraserSizeSlider.value = localStorage.getItem('eraserSizeSlider') || eraserSizeS
 let penWidth = penSizeSlider.value;
 let eraserWidth = eraserSizeSlider.value;
 
+canvas.addEventListener('touchstart', handleTouchStart);
+canvas.addEventListener('touchmove', handleTouchMove);
+canvas.addEventListener('touchend', handleTouchEnd);
+
+const getTouchCoords = (e) => {
+    const touch = e.touches[0] || e.changedTouches[0];
+    const x = touch.clientX - canvasRect.left;
+    const y = touch.clientY - canvasRect.top;
+    return { x, y };
+}
+const handleTouchStart = (e) => {
+    e.preventDefault();
+    mouseDown = true;
+
+    const { x, y } = getTouchCoords(e);
+    const lineWidth = (currentTool === 'pen') ? penWidth : eraserWidth;
+
+    const startData = {
+        x: x,
+        y: y,
+        isNewStroke: true,
+        tool: currentTool,
+        lineWidth: lineWidth,
+        color: currentColor,
+    };
+
+    const dotData = { 
+        ...startData,
+        isNewStroke: false,
+    };
+
+    drawStroke(startData); 
+    drawStroke(dotData);
+    
+    io.emit('draw', startData);
+    io.emit('draw', dotData);
+}
+const handleTouchMove = (e) => {
+    e.preventDefault();
+    if (!mouseDown) return;
+
+    const { x, y } = getTouchCoords(e);
+    const lineWidth = (currentTool === 'pen') ? penWidth : eraserWidth;
+
+    const data = {
+        x: x,
+        y: y,
+        isNewStroke: false,
+        tool: currentTool,
+        lineWidth: lineWidth,
+        color: currentColor,
+    };
+
+    drawStroke(data);
+    io.emit('draw', data);
+}
+const handleTouchEnd = (e) => {
+    e.preventDefault();
+    mouseDown = false;
+}
+
 clearBtn.onclick = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     io.emit('clearCanvas');
