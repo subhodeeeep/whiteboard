@@ -6,7 +6,7 @@ const canvasRect = canvas.getBoundingClientRect();
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-var io = io();
+var socket = io();
 
 let mouseDown = false;
 
@@ -33,6 +33,9 @@ const getTouchCoords = (e) => {
     const y = touch.clientY - canvasRect.top;
     return { x, y };
 }
+
+const activePaths = {};
+
 const handleTouchStart = (e) => {
     e.preventDefault();
     mouseDown = true;
@@ -47,19 +50,12 @@ const handleTouchStart = (e) => {
         tool: currentTool,
         lineWidth: lineWidth,
         color: currentColor,
+        socketId: socket.id
     };
-
-    const dotData = { 
-        ...startData,
-        isNewStroke: false,
-    };
-
-    drawStroke(startData); 
-    drawStroke(dotData);
-    
-    io.emit('draw', startData);
-    io.emit('draw', dotData);
+    drawStroke(startData);     
+    socket.emit('draw', startData);
 }
+
 const handleTouchMove = (e) => {
     e.preventDefault();
     if (!mouseDown) return;
@@ -74,10 +70,11 @@ const handleTouchMove = (e) => {
         tool: currentTool,
         lineWidth: lineWidth,
         color: currentColor,
+        socketId: socket.id
     };
 
     drawStroke(data);
-    io.emit('draw', data);
+    socket.emit('draw', data);
 }
 const handleTouchEnd = (e) => {
     e.preventDefault();
@@ -91,10 +88,10 @@ canvas.addEventListener('touchend', handleTouchEnd);
 
 clearBtn.onclick = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    io.emit('clearCanvas');
+    socket.emit('clearCanvas');
 }
 
-io.on('canvasCleared', () => {
+socket.on('canvasCleared', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
 
@@ -141,19 +138,11 @@ window.onmousedown = (e) => {
         tool: currentTool,
         lineWidth: lineWidth,
         color: currentColor,
+        socketId: socket.id
     };
 
-    const dotData = { 
-        ...startData,
-        isNewStroke: false,
-    };
-
-    drawStroke(startData); 
-    drawStroke(dotData);
-    
-    io.emit('draw', startData);
-    io.emit('draw', dotData);
-
+    drawStroke(startData);     
+    socket.emit('draw', startData);
 }
 
 window.onmouseup = (e) => {
@@ -175,15 +164,22 @@ window.onmousemove = (e) => {
         tool: currentTool,
         lineWidth: lineWidth,
         color: currentColor,
+        socketId: socket.id
     };
 
     drawStroke(data);
-    io.emit('draw', data);
+    socket.emit('draw', data);
 
 }
 
-function drawStroke({x, y, isNewStroke, tool, lineWidth, color}){
+function drawStroke({x, y, isNewStroke, tool, lineWidth, color, socketId}){
+    if (!socketId) return;
 
+    if (!activePaths[socketId]) {
+        activePaths[socketId] = { lastX: x, lastY: y };
+    }
+    ctx.save(); 
+    
     if (tool === 'pen'){
         ctx.globalCompositeOperation = 'source-over';
         ctx.strokeStyle = color;
@@ -195,60 +191,19 @@ function drawStroke({x, y, isNewStroke, tool, lineWidth, color}){
     ctx.lineJoin = 'bevel';
 
     if (isNewStroke){
-        ctx.beginPath();
         ctx.moveTo(x,y)
     } else {
-        ctx.lineTo(x,y);
-        ctx.stroke();
+        const last = activePaths[socketId];
+        ctx.moveTo(last.lastX, last.lastY);
     }
+    ctx.lineTo(x, y);
+    ctx.stroke();
+
+    ctx.restore();
+    activePaths[socketId] = { lastX: x, lastY: y };
 }
 
-
-
-
-// function drawFromEvent(e) {
-//     const x = e.clientX - canvasRect.left;
-//     const y = e.clientY - canvasRect.top;
-//     const lineWidth = (currentTool === 'pen') ? penWidth : eraserWidth;
-    
-//     const data = {
-//         x: x,
-//         y: y,
-//         tool: currentTool,
-//         lineWidth: lineWidth,
-//         color: currentColor
-//         // Note: isNewStroke is no longer needed!
-//     };
-    
-//     // 1. Draw locally
-//     drawDot(data);
-    
-//     // 2. Emit to server
-//     io.emit('draw', data);
-// }
-
-// function drawDot({x, y, tool, lineWidth, color}){
-    
-//     // Set the drawing properties
-//     if (tool === 'pen'){
-//         ctx.globalCompositeOperation = 'source-over';
-//         ctx.fillStyle = color; // Use fillStyle for filled circles
-//     } else if (tool === 'eraser'){
-//         ctx.globalCompositeOperation = 'destination-out';
-//     }
-    
-//     // Calculate radius. Divide by 2 because lineWidth is a diameter.
-//     const radius = lineWidth / 2;
-    
-//     // --- This is the new drawing logic ---
-//     ctx.beginPath();
-//     // ctx.arc(x, y, radius, startAngle, endAngle)
-//     ctx.arc(x, y, radius, 0, Math.PI * 2);
-//     ctx.fill(); // Use fill() instead of stroke()
-// }
-
-
-io.on("loadHistory", (history) => {
+socket.on("loadHistory", (history) => {
     console.log("Loading history...");
     for (const data of history) {
         drawStroke(data);
@@ -256,6 +211,6 @@ io.on("loadHistory", (history) => {
     console.log("History loaded.");
 })
 
-io.on("ondraw", (data) => {
+socket.on("ondraw", (data) => {
     drawStroke(data);
 });
