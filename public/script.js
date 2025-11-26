@@ -3,8 +3,8 @@ const ctx = canvas.getContext('2d');
 
 const canvasRect = canvas.getBoundingClientRect();
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.width = 720;
+canvas.height = 1500;
 
 var socket = io();
 
