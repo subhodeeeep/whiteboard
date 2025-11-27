@@ -21,6 +21,8 @@
             touch-action: none;
             display: block;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
         #pen-style-options button {
             padding: 8px 14px;
@@ -53,9 +55,11 @@
             font-size: 22px;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+            
         }
         .toolbar {
-            position: fixed;
+            position: relative;
+            z-index: 10;   /* bring toolbar above canvas */
             bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
