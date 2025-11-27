@@ -88,11 +88,13 @@ canvas.addEventListener('touchend', handleTouchEnd);
 
 clearBtn.onclick = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let key in activePaths) delete activePaths[key];
     socket.emit('clearCanvas');
 }
 
 socket.on('canvasCleared', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let key in activePaths) delete activePaths[key];
 });
 
 penBtn.onclick = () => {
@@ -190,6 +192,7 @@ function drawStroke({x, y, isNewStroke, tool, lineWidth, color, socketId}){
     ctx.lineCap = 'round';
     ctx.lineJoin = 'bevel';
 
+    ctx.beginPath();
     if (isNewStroke){
         ctx.moveTo(x,y)
     } else {
