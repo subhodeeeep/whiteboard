@@ -21,7 +21,7 @@ io.on('connection', (socket) => {
     socket.on('draw', (data) => {
         data.socketId = socket.id;
         drawingHistory.push(data);
-        socket.broadcast.emit('ondraw', data);
+        io.emit('ondraw', data);
     })
 
     socket.on('clearCanvas', () => {
