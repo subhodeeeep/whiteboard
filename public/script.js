@@ -21,7 +21,7 @@ const penSizeSlider = document.getElementById('pen-size-slider');
 const eraserSizeSlider = document.getElementById('eraser-size-slider');
 const penBtn = document.getElementById('pen-btn');
 const eraserBtn = document.getElementById('eraser-btn');
-const clearBtn = document.getElementById('clear-button');
+const clearBtn = document.getElementById('clear-btn');
 
 // load persisted prefs
 let currentTool = localStorage.getItem('currentTool') || 'pen';
