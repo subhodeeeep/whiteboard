@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const penSize = document.getElementById("pen-size-slider");
     const eraserSize = document.getElementById("eraser-size-slider");
-    const penStyleMenu = document.getElementById("pen-style-menu");
+    const penStyleMenu = document.getElementById("pen-style-options");
 
     let longPressTimer = null;
     const LONG_PRESS_TIME = 600; // ms
