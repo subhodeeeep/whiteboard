@@ -1,9 +1,9 @@
 // ui.js
 document.addEventListener("DOMContentLoaded", () => {
 
-    const penBtn = document.getElementById("penBtn");
-    const eraserBtn = document.getElementById("eraserBtn");
-    const clearBtn = document.getElementById("clearBtn");
+    const penBtn = document.getElementById("pen-btn");
+    const eraserBtn = document.getElementById("eraser-btn");
+    const clearBtn = document.getElementById("clear-btn");
 
     const penSize = document.getElementById("pen-size-slider");
     const eraserSize = document.getElementById("eraser-size-slider");
