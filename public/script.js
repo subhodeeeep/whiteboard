@@ -3,8 +3,8 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
 // set logical canvas size (you can change as needed)
-canvas.width = 720;
-canvas.height = 1500;
+canvas.width = 400;
+canvas.height = 800;
 
 // helper to get fresh bounding rect
 function getCanvasRect() {
