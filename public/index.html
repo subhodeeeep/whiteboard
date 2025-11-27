@@ -9,37 +9,89 @@
             margin: 0;
             padding: 0;
             background: #FF8DA1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
             height: 100vh;
+            overflow: hidden;
         }
         #canvas {
             width: 95vw;
             max-width: 400px; 
             aspect-ratio: 1 / 2;
-        
             background: white;
             border-radius: 8px;
-        
             touch-action: none;
             display: block;
-            margin-top: 10px;
+            margin: 0 auto;
         }
+        #pen-style-options button {
+            padding: 8px 14px;
+            margin: 6px;
+            border-radius: 8px;
+            border: none;
+            background:#ddd;
+            cursor: pointer;
+        }
+        .popup {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 10px;
+            border-radius: 12px;
+            display: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .tool-btn {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        }
+        .toolbar {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
     </style>
 </head>
 <body>
     <div class="toolbar">
-        <input type="color" id="color-picker">
-        <input type="range" id="pen-size-slider" min="1" max="100" value="3">
-        <button id="pen-btn">Pen</button>
-        <input type="range" id="eraser-size-slider" min="1" max="100" value="3">
-        <button id="eraser-btn">Eraser</button>
-        <button type="button" id="clear-button"> Clear</button>
+        <button class="tool-btn" id="pen-btn">🖊️</button>
+        <button class="tool-btn" id="eraser-btn">🧽</button>
+        <button class="tool-btn" id="clear-btn">🗑️</button>
     </div>
+
+    <div class="popup" id="pen-popup">
+        <input type="range" id="pen-size-slider" min="1" max="100" value="3">
+        <input type="color" id="color-picker">
+
+        <div id="pen-style-options">
+            <button data-style="normal">Normal</button>
+            <button data-style="sketch">Sketch</button>
+            <button data-style="calligraphy">Calligraphy</button>
+        </div>
+    </div>
+
+    <div class="popup" id="eraser-popup">
+        <input type="range" id="eraser-size-slider" min="1" max="100" value="3">
+    </div>
+
+    
     <canvas id="canvas"></canvas>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"> </script>
     <script src="script.js"></script>
+    <script src="ui.js"></script>
 </body>
 </html>
