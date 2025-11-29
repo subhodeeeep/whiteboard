@@ -1,101 +1,65 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Collaborative Whiteboard</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: #FF8DA1;
-            height: 100vh;
-            overflow: hidden;
-        }
-        #canvas {
-            width: 95vw;
-            max-width: 400px; 
-            aspect-ratio: 1 / 2;
-            background: white;
-            border-radius: 8px;
-            touch-action: none;
-            display: block;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-        #pen-style-options button {
-            padding: 8px 14px;
-            margin: 6px;
-            border-radius: 8px;
-            border: none;
-            background:#ddd;
-            cursor: pointer;
-        }
-        .popup {
-            position: absolute;
-            top: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: white;
-            padding: 10px;
-            border-radius: 12px;
-            display: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        .tool-btn {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            border: none;
-            background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 22px;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-            
-        }
-        .toolbar {
-            position: relative;
-            z-index: 10;   /* bring toolbar above canvas */
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 15px;
-            z-index: 10;
-        }
-
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Collaborative Whiteboard</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="toolbar">
-        <button class="tool-btn" id="pen-btn">🖊️</button>
-        <button class="tool-btn" id="eraser-btn">🧽</button>
-        <button class="tool-btn" id="clear-btn">🗑️</button>
-    </div>
+  <canvas id="canvas"></canvas>
 
-    <div class="popup" id="pen-popup">
-        <input type="range" id="pen-size-slider" min="1" max="100" value="3">
-        <input type="color" id="color-picker">
+  <div class="toolbar">
 
-        <div id="pen-style-options">
-            <button data-style="normal">Normal</button>
-            <button data-style="sketch">Sketch</button>
-            <button data-style="calligraphy">Calligraphy</button>
+    <div class="tool-wrapper">
+      <button class="tool-btn" id="pen-btn" aria-pressed="true">🖊️</button>
+      <div class="popup" id="pen-popup" role="dialog" aria-hidden="true">
+        <div class="row">
+          <label for="pen-style-select">Style</label>
+          <select id="pen-style-select">
+            <option value="soft">Soft</option>
+            <option value="hard">Hard</option>
+            <option value="dotted">Dotted</option>
+            <option value="calligraphy">Calligraphy</option>
+          </select>
+          <label for="color-picker">Color</label>
+          <input type="color" id="color-picker" />
+
         </div>
+      </div>
     </div>
 
-    <div class="popup" id="eraser-popup">
-        <input type="range" id="eraser-size-slider" min="1" max="100" value="3">
+    <div class="tool-wrapper">
+      <button class="tool-btn" id="eraser-btn">🧽</button>
+      <div class="popup" id="eraser-popup" role="dialog" aria-hidden="true">
+        <div class="row">
+          <label for="eraser-style-select">Eraser</label>
+          <select id="eraser-style-select">
+            <option value="hard">Hard</option>
+            <option value="soft">Soft</option>
+            <option value="smudge">Smudge</option>
+            <option value="dottedErase">Dotted</option>
+          </select>
+        </div>
+      </div>
     </div>
 
-    
-    <canvas id="canvas"></canvas>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"> </script>
-    <script src="script.js"></script>
-    <script src="ui.js"></script>
+    <div class="global-controls">
+      <div class="control-block">
+        <label>Size</label>
+        <input id="global-size-slider" type="range" min="1" max="120" value="10">
+        <div id="size-value">10</div>
+      </div>
+    </div>
+
+    <button class="tool-btn" id="undo-btn" title="Undo">↶</button>
+    <button class="tool-btn" id="redo-btn" title="Redo">↷</button>
+    <button class="tool-btn" id="clear-btn" title="Clear">🗑️</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="styles.js"></script>
+  <script src="ui.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

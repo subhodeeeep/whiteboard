@@ -1,0 +1,97 @@
+/* style.css - minimal, focused UI */
+* { box-sizing: border-box; }
+html,body { height:100%; margin:0; font-family:Inter,system-ui,Arial; background:#f6f6f8; }
+
+#canvas {
+  display:block;
+  margin: 6vh auto 0;
+  background: #ffffff;
+  border-radius: 10px;
+  width: 95vw;
+  max-width: 420px;
+  aspect-ratio: 1/2;
+  touch-action: none;
+  box-shadow: 0 8px 30px rgba(50,50,93,0.08);
+}
+
+/* toolbar */
+.toolbar {
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  z-index: 60;
+}
+
+/* tool button */
+.tool-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  border: none;
+  background: white;
+  box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* popup */
+.tool-wrapper { position: relative; }
+.popup {
+  position: absolute;
+  bottom: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  width: 260px;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 12px 36px rgba(16,24,40,0.12);
+  display: none;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .18s;
+  z-index: 90;
+}
+.tool-wrapper.show-hover > .popup,
+.tool-wrapper.show-touch > .popup {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* popup rows */
+.row { margin-bottom: 8px; display:flex; flex-direction:column; gap:6px; }
+label { font-size:12px; color:#222; }
+select { padding:6px 8px; border-radius:8px; border:1px solid #eee; background:#fafafa; }
+
+.color-grid {
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap:6px;
+}
+.color-swatch {
+  width:34px; height:24px; border-radius:6px; border:1px solid #e6e6e6; cursor:pointer;
+}
+
+/* global controls */
+.global-controls {
+  display:flex;
+  gap:10px;
+  background: white;
+  padding:8px;
+  border-radius:12px;
+  box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+  align-items:center;
+}
+.control-block { display:flex; flex-direction:column; align-items:center; gap:6px; width:120px; }
+input[type=range] { width:100%; }
+
+/* small responsive */
+@media (max-width:520px) {
+  .popup { right:8px; left:auto; transform:none; width:220px; }
+  #canvas { max-width: 360px; }
+}
