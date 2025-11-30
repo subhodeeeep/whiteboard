@@ -1,5 +1,8 @@
 /* style.css - minimal, focused UI */
-* { box-sizing: border-box; }
+* { 
+  box-sizing: border-box;
+  user-select: none;
+}
 html,body { height:100%; margin:0; font-family:Inter,system-ui,Arial; background:#f6f6f8; }
 
 #canvas {
@@ -21,9 +24,15 @@ html,body { height:100%; margin:0; font-family:Inter,system-ui,Arial; background
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 10px;
+  gap: 1px;
   align-items: center;
   z-index: 60;
+  max-width: 96vw;
+}
+
+.main-tools {
+  max-width: 10px;
+  overflow: hidden;
 }
 
 /* tool button */
@@ -87,8 +96,12 @@ select { padding:6px 8px; border-radius:8px; border:1px solid #eee; background:#
   box-shadow: 0 6px 18px rgba(16,24,40,0.06);
   align-items:center;
 }
-.control-block { display:flex; flex-direction:column; align-items:center; gap:6px; width:120px; }
+
+.control-block { display:flex; flex-direction:column; align-items:center; gap:6px; width:80px; }
 input[type=range] { width:100%; }
+#size-value {
+  font-size:10px; color:#444;
+}
 
 /* small responsive */
 @media (max-width:520px) {
